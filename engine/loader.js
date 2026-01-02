@@ -15,7 +15,6 @@ function Load(path, manager, { parent = null, scale = 1, pos = [0, 0, 0], quat =
     group.position.set(...pos);
     group.quaternion.set(...quat);
 
-
     if (parent) parent.add(group);
     manager.submit(path, group);
   }, (xhr) => {

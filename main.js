@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import * as Engine from "./engine/main.js";
+import * as Controls from "./controls.js";
 
 import * as Setup from "./setup.js";
 
@@ -16,14 +17,21 @@ window.onload = async () => {
   window.Player = Player;
   window.Camera = Camera;
   window.World = World;
+  window.Keys = Controls.Keys;
 };
 
 const Clock = new THREE.Clock();
 function start() {
-  loop();
-  setInterval(() => Engine.UpdatePhysics(1 / 60), 1000 / 60);
+  renderLoop();
+  setInterval(logicLoop, 1000 / 60);
 }
-function loop() {
+function renderLoop() {
   Engine.Render(Clock.getDelta());
-  requestAnimationFrame(loop);
+  requestAnimationFrame(renderLoop);
+}
+
+function logicLoop() {
+  Controls.HandleInput(Player, Camera);
+
+  Engine.UpdatePhysics(1 / 60);
 }

@@ -47,8 +47,10 @@ class Entity {
   }
 
   Teleport({ pos = [0, 0, 0], quat = [0, 0, 0, 1]} = {}) {
-    this.VisualObj.position.set(...pos);
-    this.VisualObj.quaternion.set(...quat);
+    if (this.VisualObj) {
+      this.VisualObj.position.set(...pos);
+      this.VisualObj.quaternion.set(...quat);
+    }
 
     if (this.PhysicalObj) {
       this.PhysicalObj.position.set(...pos);
@@ -60,8 +62,10 @@ class Entity {
 
   Update() {
     if (!this.PhysicalObj) return;
-    this.VisualObj.position.copy(this.PhysicalObj.position);
-    this.VisualObj.quaternion.copy(this.PhysicalObj.quaternion);
+    if (this.VisualObj) {
+      this.VisualObj.position.copy(this.PhysicalObj.position);
+      this.VisualObj.quaternion.copy(this.PhysicalObj.quaternion);
+    }
   }
 }
 
