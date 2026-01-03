@@ -70,7 +70,6 @@ export function DirectionalLight({ color = 0xffffff, intensity = 1, shadow = fal
 
   light.add(light.target);
   if (parent) parent.add(light);
-  if (parent) parent.add(light.target);
   return light;
 }
 

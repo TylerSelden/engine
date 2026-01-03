@@ -17,10 +17,6 @@ export function loadAssets(scene, cb) {
 }
 
 function createEntities() {
-  let radius = 0.23;
-  let height = 1.62;
-  let pos = [0, height / 2 + 0.25, -2];
-
   const ground = Objects.PPlane({ mass: 0 });
   ground.quaternion.setFromAxisAngle(
     new CANNON.Vec3(1, 0, 0),

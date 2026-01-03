@@ -9,8 +9,6 @@ let Scene, Player, Renderer, Camera, World;
 window.onload = async () => {
   ({ Scene, Renderer, Camera, World } = Engine.Init());
 
-  Setup.loadAssets(Scene, start);
-
   Player = new Entities.Entity(new Objects.VGroup({ children: [Camera] }), Objects.PPill({
     radius: 0.25,
     mass: 70,
@@ -23,13 +21,7 @@ window.onload = async () => {
   Camera.position.y = 1.65;
   Entities.Add(Player);
 
-  // FIXME
-  window.Entities = Entities;
-  window.THREE = THREE;
-  window.Scene = Scene;
-  window.Player = Player;
-  window.Camera = Camera;
-  window.World = World;
+  Setup.loadAssets(Scene, start);
 };
 
 const Clock = new THREE.Clock();
