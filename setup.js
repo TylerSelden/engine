@@ -1,6 +1,6 @@
 import * as CANNON from "cannon-es";
 import * as Loader from "./engine/plugins/loader.js";
-import * as Objects from "./engine/objects.js";
+import * as Objects from "./objects.js";
 import * as Entities from "./engine/entities.js";
 
 const pairs = [];
@@ -13,6 +13,11 @@ export function loadAssets(scene, cb) {
   Manager = new Loader.Manager();
   Manager.register("./assets/stadium.glb");
   Manager.register("./assets/skybox.glb");
+  Manager.register("./assets/pthing.glb");
+  Manager.register("./assets/apple.glb");
+  //Manager.register("./assets/ground.glb");
+  //Manager.register("./assets/ball.glb");
+
   Manager.load(createEntities);
 }
 
@@ -24,10 +29,12 @@ function createEntities() {
   );
   pairs.push([null, ground, null, Object.values(ground.quaternion)])
 
-  pairs.push([Manager.models["./assets/skybox.glb"], null, [0, 0, 0]]);
-  pairs.push([Manager.models["./assets/stadium.glb"], null, [0, 0, 0]]);
-  pairs.push([Objects.VCube({ size: 1, color: 0xaaaaff }), Objects.PCube({ size: 1, mass: 50, fixedRotation: true }), [0, 0.5, -2]]);
-  pairs.push([Objects.VCube({ size: 10, color: 0xffeeaa }), Objects.PCube({ size: 10, mass: 0 }), [20, 0, 0]]);
+  pairs.push([...Manager.models["./assets/skybox.glb"], [0, 0, 0]]);
+  pairs.push([...Manager.models["./assets/stadium.glb"], [0, -0.6, 0]]);
+  pairs.push([...Manager.models["./assets/pthing.glb"], [0, 1, -3]]);
+  pairs.push([...Manager.models["./assets/apple.glb"], [0, 5, -3]]);
+  //pairs.push([...Manager.models["./assets/ground.glb"], [0, 0, -3]]);
+  //pairs.push([...Manager.models["./assets/ball.glb"], [0, 3, -3]]);
 
   for (let pair of pairs) {
     const pos = pair[2] || [0, 0, 0];

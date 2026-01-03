@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import * as CANNON from 'cannon-es';
 import * as Entities from "./entities.js";
-import * as Objects from "./objects.js";
 
 let Scene, World, Camera, Renderer;
 
@@ -20,7 +19,7 @@ function Init(playerPhysicalObj) {
   World.solver.tolerance = 0.001;
 
   Entities.SetContext(Scene, World);
-  Camera = Objects.Camera();
+  Camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 
   return { Scene, Renderer, Camera, World };

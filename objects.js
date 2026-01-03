@@ -80,9 +80,9 @@ export function Camera({ parent = null } = {}) {
   return camera;
 }
 
-export function PBody(mass, shape, { linearDamping = 0.1, angularDamping = 0.2, type = CANNON.Body.DYNAMIC, offsetPos = [0, 0, 0], fixedRotation = false } = {}) {
+export function PBody(mass, shape = null, { linearDamping = 0.1, angularDamping = 0.2, type = CANNON.Body.DYNAMIC, offsetPos = [0, 0, 0], fixedRotation = false } = {}) {
   const body = new CANNON.Body({ mass, linearDamping, angularDamping, type, fixedRotation });
-  body.addShape(shape, new CANNON.Vec3(...offsetPos));
+  if (shape) body.addShape(shape, new CANNON.Vec3(...offsetPos));
   return body;
 }
 

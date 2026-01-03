@@ -1,15 +1,17 @@
 import * as THREE from "three";
 import * as Engine from "./engine/main.js";
-import * as Objects from "./engine/objects.js";
 import * as Entities from "./engine/entities.js";
 import * as Setup from "./setup.js";
+import * as Objects from "./objects.js";
 
 let Scene, Player, Renderer, Camera, World;
 
 window.onload = async () => {
   ({ Scene, Renderer, Camera, World } = Engine.Init());
-
-  Player = new Entities.Entity(new Objects.VGroup({ children: [Camera] }), Objects.PPill({
+  
+  const playerGroup = new THREE.Group();
+  playerGroup.add(Camera);
+  Player = new Entities.Entity(playerGroup, Objects.PPill({
     radius: 0.25,
     mass: 70,
     height: 1.75,
@@ -18,10 +20,18 @@ window.onload = async () => {
     linearDamping: 0,
     angularDamping: 0
   }));
+  World.gravity.y = -9.81;
   Camera.position.y = 1.65;
   Entities.Add(Player);
 
   Setup.loadAssets(Scene, start);
+
+  window.Scene = Scene;
+  window.Player = Player;
+  window.Renderer = Renderer;
+  window.Camera = Camera;
+  window.World = World;
+  window.Entities = Entities;
 };
 
 const Clock = new THREE.Clock();

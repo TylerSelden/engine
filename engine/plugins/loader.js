@@ -1,30 +1,8 @@
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import * as Objects from "../objects.js";
+import * as THREE from "three";
+import * as CANNON from "cannon-es";
 
 const Loader = new GLTFLoader();
-
-/*
-function Load(path, manager, { parent = null, scale = 1, pos = [0, 0, 0], quat = [0, 0, 0, 1], offsetPos = [0, 0, 0], offsetQuat = [0, 0, 0, 1] } = {}) {
-  manager.register(path);
-  Loader.load(path, (gltf) => {
-    gltf.scene.scale.set(scale, scale, scale);
-    gltf.scene.position.set(...offsetPos);
-    gltf.scene.quaternion.set(...offsetQuat);
-
-    const group = Objects.VGroup({ children: [gltf.scene] });
-
-    group.position.set(...pos);
-    group.quaternion.set(...quat);
-
-    if (parent) parent.add(group);
-    manager.submit(path, group);
-  }, (xhr) => {
-    manager.logStatus(path, xhr.loaded, xhr.total);
-  }, (err) => {
-    throw new Error(err);
-  });
-}
-*/
 
 class Manager {
   constructor(elemId = "loading") {
@@ -43,21 +21,40 @@ class Manager {
     this.total[path] = t;
     this.loaded[path] = l;
   }
-  register = (path, { parent = null, scale = 1, offsetPos = [0, 0, 0], offsetQuat = [0, 0, 0, 1] } = {}) => {
-    this.models[path] = null;
-    this.loadData[path] = { parent, scale, offsetPos, offsetQuat };
+  register = (path, { parent = null, scale = 1, pos = [0, 0, 0], quat = [0, 0, 0, 1] } = {}) => {
+    this.models[path] = [];
+    this.loadData[path] = { parent, scale, pos, quat };
   }
   load = (cb) => {
     this.cb = cb;
     for (const [path, data] of Object.entries(this.loadData)) {
-      const { parent, scale, offsetPos, offsetQuat } = data;
+      const { parent, scale, pos, quat } = data;
       Loader.load(path, (model) => {
         model.scene.scale.set(scale, scale, scale);
-        model.scene.position.set(...offsetPos);
-        model.scene.quaternion.set(...offsetQuat);
+        model.scene.position.set(...pos);
+        model.scene.quaternion.set(...quat);
+
+        const physicalObj = model.scene.userData.physics ? new CANNON.Body(model.scene.userData.physics) : null;
+        if (model.scene.userData.physics) {
+          model.scene.traverse((child) => {
+
+            if (child.isMesh && child.userData.physicalObj) {
+              if (child.userData.name === "Box") {
+                const scale = Object.values(child.scale).map(val => val / 2);
+                physicalObj.addShape(new CANNON.Box(new CANNON.Vec3(...scale)), child.position, child.quaternion);
+              } else if (child.userData.name === "Sphere") {
+                console.log(child.scale, child.position.y);
+                physicalObj.addShape(new CANNON.Sphere(child.scale.x), child.position, child.quaternion);
+              } else if (child.userData.name === "Cylinder") {
+                physicalObj.addShape(new CANNON.Cylinder(child.scale.x, child.scale.x, child.scale.y, 16), child.position, child.quaternion);
+              }
+              child.visible = false;
+            }
+          });
+        }
         
         if (parent) parent.add(model.scene);
-        this.submit(path, model.scene);
+        this.submit(path, [model.scene, physicalObj]);
       }, (xhr) => {
         this.logStatus(path, xhr.loaded, xhr.total);
       }, (err) => {
@@ -67,7 +64,7 @@ class Manager {
   }
   submit = (path, obj) => {
     this.models[path] = obj;
-    if (Object.values(this.models).every(v => v != null)) {
+    if (Object.values(this.models).every(v => v.length > 0)) {
       if (this.elem) this.elem.classList.add("d-none");
       if (this.cb) this.cb();
     }
