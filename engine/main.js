@@ -22,6 +22,7 @@ function Init(playerPhysicalObj) {
   Entities.SetContext(Scene, World);
   Camera = Objects.Camera();
 
+
   return { Scene, Renderer, Camera, World };
 }
 

@@ -1,17 +1,33 @@
 import * as THREE from "three";
 import * as Engine from "./engine/main.js";
+import * as Objects from "./engine/objects.js";
+import * as Entities from "./engine/entities.js";
 import * as Setup from "./setup.js";
 
 let Scene, Player, Renderer, Camera, World;
 
 window.onload = async () => {
-  ({ Scene, Player, Renderer, Camera, World } = Engine.Init());
+  ({ Scene, Renderer, Camera, World } = Engine.Init());
 
   Setup.loadAssets(Scene, start);
 
+  Player = new Entities.Entity(new Objects.VGroup({ children: [Camera] }), Objects.PPill({
+    radius: 0.25,
+    mass: 70,
+    height: 1.75,
+    offsetPos: [0, 0.875, 0],
+    fixedRotation: true,
+    linearDamping: 0,
+    angularDamping: 0
+  }));
+  Camera.position.y = 1.65;
+  Entities.Add(Player);
+
   // FIXME
+  window.Entities = Entities;
   window.THREE = THREE;
   window.Scene = Scene;
+  window.Player = Player;
   window.Camera = Camera;
   window.World = World;
 };
