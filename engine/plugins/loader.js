@@ -1,8 +1,9 @@
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import * as Objects from "./objects.js";
+import * as Objects from "../objects.js";
 
 const Loader = new GLTFLoader();
 
+/*
 function Load(path, manager, { parent = null, scale = 1, pos = [0, 0, 0], quat = [0, 0, 0, 1], offsetPos = [0, 0, 0], offsetQuat = [0, 0, 0, 1] } = {}) {
   manager.register(path);
   Loader.load(path, (gltf) => {
@@ -23,14 +24,15 @@ function Load(path, manager, { parent = null, scale = 1, pos = [0, 0, 0], quat =
     throw new Error(err);
   });
 }
+*/
 
 class Manager {
-  constructor({ elemId = "loading", cb = null } = {}) {
+  constructor(elemId = "loading") {
     this.loaded = {};
     this.total = {};
     this.models = {};
+    this.loadData = {};
     this.percentage = 0;
-    this.cb = cb;
 
     this.elem = document.getElementById(elemId);
     this.elem.classList.remove("d-none");
@@ -41,8 +43,27 @@ class Manager {
     this.total[path] = t;
     this.loaded[path] = l;
   }
-  register = (path) => {
+  register = (path, { parent = null, scale = 1, offsetPos = [0, 0, 0], offsetQuat = [0, 0, 0, 1] } = {}) => {
     this.models[path] = null;
+    this.loadData[path] = { parent, scale, offsetPos, offsetQuat };
+  }
+  load = (cb) => {
+    this.cb = cb;
+    for (const [path, data] of Object.entries(this.loadData)) {
+      const { parent, scale, offsetPos, offsetQuat } = data;
+      Loader.load(path, (model) => {
+        model.scene.scale.set(scale, scale, scale);
+        model.scene.position.set(...offsetPos);
+        model.scene.quaternion.set(...offsetQuat);
+        
+        if (parent) parent.add(model.scene);
+        this.submit(path, model.scene);
+      }, (xhr) => {
+        this.logStatus(path, xhr.loaded, xhr.total);
+      }, (err) => {
+        throw new Error(err);
+      });
+    }
   }
   submit = (path, obj) => {
     this.models[path] = obj;
@@ -66,4 +87,4 @@ class Manager {
   }
 }
 
-export { Load, Manager };
+export { Manager };

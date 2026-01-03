@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-let Entities = {};
+const Entities = {};
 
 let Scene, World;
 
@@ -37,16 +37,13 @@ function Update() {
 }
 
 class Entity {
-  constructor(visualObj, physicalObj = null, { pos = [0, 0, 0], quat = [0, 0, 0, 1], isPlayer = false } = {}) {
+  constructor(visualObj, physicalObj = null, { pos = [0, 0, 0], quat = [0, 0, 0, 1] } = {}) {
     this.VisualObj = visualObj;
     this.PhysicalObj = physicalObj;
-
-    this.isPlayer = isPlayer;
-
-    this.Teleport({ pos, quat });
+    this.Teleport(pos, quat);
   }
 
-  Teleport({ pos = [0, 0, 0], quat = [0, 0, 0, 1]} = {}) {
+  Teleport(pos = [0, 0, 0], quat = [0, 0, 0, 1]) {
     if (this.VisualObj) {
       this.VisualObj.position.set(...pos);
       this.VisualObj.quaternion.set(...quat);
@@ -61,11 +58,9 @@ class Entity {
   }
 
   Update() {
-    if (!this.PhysicalObj) return;
-    if (this.VisualObj) {
-      this.VisualObj.position.copy(this.PhysicalObj.position);
-      this.VisualObj.quaternion.copy(this.PhysicalObj.quaternion);
-    }
+    if (!this.PhysicalObj || !this.VisualObj) return;
+    this.VisualObj.position.copy(this.PhysicalObj.position);
+    this.VisualObj.quaternion.copy(this.PhysicalObj.quaternion);
   }
 }
 

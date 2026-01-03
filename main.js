@@ -1,7 +1,5 @@
 import * as THREE from "three";
 import * as Engine from "./engine/main.js";
-import * as Controls from "./controls.js";
-
 import * as Setup from "./setup.js";
 
 let Scene, Player, Renderer, Camera, World;
@@ -14,10 +12,8 @@ window.onload = async () => {
   // FIXME
   window.THREE = THREE;
   window.Scene = Scene;
-  window.Player = Player;
   window.Camera = Camera;
   window.World = World;
-  window.Keys = Controls.Keys;
 };
 
 const Clock = new THREE.Clock();
@@ -31,7 +27,5 @@ function renderLoop() {
 }
 
 function logicLoop() {
-  Controls.HandleInput(Player, Camera);
-
   Engine.UpdatePhysics(1 / 60);
 }

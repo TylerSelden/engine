@@ -3,7 +3,7 @@ import * as CANNON from 'cannon-es';
 import * as Entities from "./entities.js";
 import * as Objects from "./objects.js";
 
-let Scene, World, Camera, Renderer, Player;
+let Scene, World, Camera, Renderer;
 
 function Init(playerPhysicalObj) {
   Renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -13,7 +13,7 @@ function Init(playerPhysicalObj) {
 
   Scene = new THREE.Scene();
 
-  World = new CANNON.World({ gravity: new CANNON.Vec3(0, -9.8, 0) });
+  World = new CANNON.World();
   World.defaultContactMaterial.friction = 0.25;
   World.broadphase = new CANNON.SAPBroadphase(World);
   World.solver.iterations = 10;
@@ -21,20 +21,8 @@ function Init(playerPhysicalObj) {
 
   Entities.SetContext(Scene, World);
   Camera = Objects.Camera();
-  const physicalObj = new Objects.PPill({
-    radius: 0.25,
-    mass: 70,
-    height: 1.75,
-    offsetPos: [0, 0.875, 0],
-    fixedRotation: true,
-    linearDamping: 0,
-    angularDamping: 0
-  });
-  Camera.position.y = 1.65;
-  Player = new Entities.Entity(Objects.VGroup({ children: [Camera] }), physicalObj, { isPlayer: true });
-  Entities.Add(Player);
 
-  return { Scene, Player, Renderer, Camera, World };
+  return { Scene, Renderer, Camera, World };
 }
 
 function UpdatePhysics(delta) {

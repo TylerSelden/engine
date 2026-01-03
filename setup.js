@@ -1,5 +1,5 @@
 import * as CANNON from "cannon-es";
-import * as Loader from "./engine/loader.js";
+import * as Loader from "./engine/plugins/loader.js";
 import * as Objects from "./engine/objects.js";
 import * as Entities from "./engine/entities.js";
 
@@ -10,9 +10,10 @@ export function loadAssets(scene, cb) {
   Scene = scene;
   Cb = cb;
 
-  Manager = new Loader.Manager({ cb: createEntities });
-  Loader.Load("./assets/stadium.glb", Manager);
-  Loader.Load("./assets/skybox.glb", Manager);
+  Manager = new Loader.Manager();
+  Manager.register("./assets/stadium.glb");
+  Manager.register("./assets/skybox.glb");
+  Manager.load(createEntities);
 }
 
 function createEntities() {
@@ -35,7 +36,7 @@ function createEntities() {
   for (let pair of pairs) {
     const pos = pair[2] || [0, 0, 0];
     const quat = pair[3] || [0, 0, 0, 1];
-    console.log(quat)
+
     Entities.Add(new Entities.Entity(pair[0], pair[1], { pos, quat }));
   }
 
