@@ -12,8 +12,8 @@ export async function loadAssets(scene) {
   Manager = new Loader.Manager();
   Manager.register("./assets/stadium.glb");
   Manager.register("./assets/skybox.glb");
-  Manager.register("./assets/thing.glb");
-  Manager.register("./assets/apple.glb", { pos: [0, 1, -3] });
+  Manager.register("./assets/thing.glb", { pos: [0, 2, -3] });
+  Manager.register("./assets/apple.glb", { pos: [0, 4, -3] });
   Manager.register("./assets/ball.glb");
 
   await Manager.load();
@@ -27,7 +27,9 @@ export async function loadAssets(scene) {
 
   Entities.Add(Manager.models["./assets/skybox.glb"]);
   Entities.Add(Manager.models["./assets/stadium.glb"]);
+  Entities.Add(Manager.models["./assets/thing.glb"]);
   Entities.Add(Manager.models["./assets/apple.glb"]);
+//  Entities.Add(Manager.models["./assets/ball.glb"]);
 
   Objects.AmbientLight({ parent: Scene, intensity: 1, color: 0x5A2E8A });
   Objects.AmbientLight({ parent: Scene, intensity: 2, color: 0xFFFFFF });
