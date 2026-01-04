@@ -3,6 +3,7 @@ import * as Engine from "./engine/main.js";
 import * as Entities from "./engine/entities.js";
 import * as Setup from "./setup.js";
 import * as Objects from "./objects.js";
+import * as Controls from "./engine/plugins/controls.js";
 
 let Scene, Player, Renderer, Camera, World;
 const Clock = new THREE.Clock();
@@ -45,4 +46,5 @@ function renderLoop() {
 
 function logicLoop() {
   Engine.UpdatePhysics(1 / 60);
+  Controls.Update();
 }
