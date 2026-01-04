@@ -5,6 +5,7 @@ import * as Setup from "./setup.js";
 import * as Objects from "./objects.js";
 
 let Scene, Player, Renderer, Camera, World;
+const Clock = new THREE.Clock();
 
 window.onload = async () => {
   ({ Scene, Renderer, Camera, World } = Engine.Init());
@@ -24,21 +25,19 @@ window.onload = async () => {
   Camera.position.y = 1.65;
   Entities.Add(Player);
 
-  Setup.loadAssets(Scene, start);
-
   window.Scene = Scene;
   window.Player = Player;
   window.Renderer = Renderer;
   window.Camera = Camera;
   window.World = World;
   window.Entities = Entities;
-};
 
-const Clock = new THREE.Clock();
-function start() {
+  await Setup.loadAssets(Scene);
+
   renderLoop();
   setInterval(logicLoop, 1000 / 60);
-}
+};
+
 function renderLoop() {
   Engine.Render(Clock.getDelta());
   requestAnimationFrame(renderLoop);

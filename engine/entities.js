@@ -10,13 +10,11 @@ function SetContext(scene, world) {
 }
 
 function Add(entity) {
-  let id = crypto.randomUUID();
-
-  Entities[id] = entity;
+  Entities[entity.id] = entity;
   if (entity.VisualObj) Scene.add(entity.VisualObj);
   if (entity.PhysicalObj) World.addBody(entity.PhysicalObj);
 
-  return id;
+  return entity.id;
 }
 
 function Remove(id) {
@@ -41,6 +39,7 @@ class Entity {
     this.VisualObj = visualObj;
     this.PhysicalObj = physicalObj;
     this.Teleport(pos, quat);
+    this.id = crypto.randomUUID();
   }
 
   Teleport(pos = [0, 0, 0], quat = [0, 0, 0, 1]) {
