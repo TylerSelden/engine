@@ -39,16 +39,18 @@ class Manager {
           model.scene.traverse((child) => {
 
             if (child.isMesh && child.userData.physicalObj) {
+              const pos = child.getWorldPosition(new THREE.Vector3());
+              const quat = child.getWorldQuaternion(new THREE.Quaternion());
+              child.visible = false;
+
               if (child.userData.name === "Box") {
                 const scale = Object.values(child.scale).map(val => val / 2);
-                physicalObj.addShape(new CANNON.Box(new CANNON.Vec3(...scale)), child.position, child.quaternion);
+                physicalObj.addShape(new CANNON.Box(new CANNON.Vec3(...scale)), pos, quat);
               } else if (child.userData.name === "Sphere") {
-                console.log(child.scale, child.position.y);
-                physicalObj.addShape(new CANNON.Sphere(child.scale.x), child.position, child.quaternion);
+                physicalObj.addShape(new CANNON.Sphere(child.scale.x), pos, quat); 
               } else if (child.userData.name === "Cylinder") {
-                physicalObj.addShape(new CANNON.Cylinder(child.scale.x, child.scale.x, child.scale.y, 16), child.position, child.quaternion);
+                physicalObj.addShape(new CANNON.Cylinder(child.scale.x, child.scale.x, child.scale.y, 16), pos, quat);
               }
-              child.visible = false;
             }
           });
         }

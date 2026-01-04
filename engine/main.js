@@ -13,7 +13,6 @@ function Init(playerPhysicalObj) {
   Scene = new THREE.Scene();
 
   World = new CANNON.World();
-  World.defaultContactMaterial.friction = 0.25;
   World.broadphase = new CANNON.SAPBroadphase(World);
   World.solver.iterations = 10;
   World.solver.tolerance = 0.001;
