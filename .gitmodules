@@ -1,4 +1,0 @@
-[submodule "three.js"]
-	path = three.js
-	url = git@github.com:TylerSelden/three.js
-  branch = custom-editor
