@@ -36,7 +36,19 @@ export const Mouse = {
     down: null,
     hold: null,
     up: null,
-    move: null
+    move: null,
+    lockDown: null,
+    lockHold: null,
+    lockUp: null,
+    lockMove: null
+  },
+  attemptPointerLock: false,
+
+  EnablePointerLock() {
+    this.attemptPointerLock = true;
+  },
+  DisablePointerLock() {
+    this.attemptPointerLock = false;
   },
   On(eventType, func) {
     if (this.events[eventType] !== undefined) this.events[eventType] = func;
@@ -50,17 +62,21 @@ export const Mouse = {
 };
 
 window.addEventListener('mousedown', (e) => {
+  if (Mouse.attemptPointerLock) document.querySelector("canvas").requestPointerLock();
   Mouse.isDown = true;
-  if (Mouse.events.down) Mouse.events.down(e);
+  if (!document.pointerLockElement && Mouse.events.down) Mouse.events.down(e);
+  if (document.pointerLockElement && Mouse.events.lockDown) Mouse.events.lockDown(e);
 });
 
 window.addEventListener('mouseup', (e) => {
   Mouse.isDown = false;
-  if (Mouse.events.up) Mouse.events.up(e);
+  if (!document.pointerLockElement && Mouse.events.up) Mouse.events.up(e);
+  if (document.pointerLockElement && Mouse.events.lockUp) Mouse.events.lockUp(e);
 });
 
 window.addEventListener('mousemove', (e) => {
-  if (Mouse.events.move) Mouse.events.move(e);
+  if (!document.pointerLockElement && Mouse.events.move) Mouse.events.move(e);
+  if (document.pointerLockElement && Mouse.events.lockMove) Mouse.events.lockMove(e);
 });
 
 

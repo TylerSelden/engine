@@ -26,6 +26,14 @@ window.onload = async () => {
   Camera.position.y = 1.65;
   Entities.Add(Player);
 
+  // ehh something like this
+  Controls.Mouse.EnablePointerLock();
+  Controls.Mouse.On("lockMove", (evt) => {
+    Camera.rotation.y -= evt.movementX * 0.002;
+    Camera.rotation.x -= evt.movementY * 0.002;
+    Camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, Camera.rotation.x));
+  });
+
   window.Scene = Scene;
   window.Player = Player;
   window.Renderer = Renderer;

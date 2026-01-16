@@ -7,8 +7,10 @@
 
 - [X] Export entities from loader plugin
 - [X] Make Manager.load() async
+- [ ] Controls.js
+- [ ] Animations.js .___.
 
 ---
 
 - [X] EN: 'menubar/new/from [glb|gltf]'
-- [ ] other langs
+- [X] other langs
